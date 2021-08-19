@@ -2,12 +2,15 @@
 
 ## Table of Contents
 
-* [Instructions](#instructions)
+Introduction
 
-## Instructions
+This is a landing page project  with different sections
 
-The starter project has some HTML and CSS styling to display a static version of the Landing Page project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+Instructions
+1) Clone git@github.com:chauhanramita/fend.git#refresh-2019-remita-changes  git repository and create new branch to make necessary changes in the code
+2) Save and check the changes in your browser
 
-To get started, open `js/app.js` and start building out the app's functionality
+Description and Tools
+With the use of HTML  CSS and Javascript the landing page is built with various sections.Each section gets highlighted when selected.
 
-For specific, detailed instructions, look at the project instructions in the Udacity Classroom.
+

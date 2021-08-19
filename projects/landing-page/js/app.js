@@ -60,16 +60,27 @@ let allSection = null;
 const activeClass = "active";
 
 function buildMenu() {
+  let addActive = ` ${activeClass}`;
   allSection.forEach((section) => {
     const newLi = document.createElement("li");
     const anchor = document.createElement("a");
-    anchor.setAttribute("class", "menu__link");
+    anchor.setAttribute("class", `menu__link${addActive}`);
+    addActive = "";
     const newContent = document.createTextNode(section.dataset.nav);
     anchor.appendChild(newContent);
     anchor.dataset.section = section.id;
     newLi.appendChild(anchor);
     nav.appendChild(newLi);
   });
+
+  const selectedLink = document.querySelector(`a.${activeClass}`);
+  const sectionId = selectedLink.dataset.section;
+  const section = document.querySelector(`#${sectionId}`);
+  if (section) {
+    setTimeout(() => {
+      section.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  }
 }
 
 function handleScrollOnClick() {
@@ -80,10 +91,17 @@ function handleScrollOnClick() {
       allSection.forEach((section) => section.classList.remove(activeClass));
       section.classList.add(activeClass);
       section.scrollIntoView({ behavior: "smooth" });
+      setSelectedMenu();
+      e.target.classList.add(activeClass);
     } catch (e) {
       console.log(e);
     }
   });
+}
+
+function setSelectedMenu() {
+  const allLinks = document.querySelectorAll("a.menu__link");
+  allLinks.forEach((section) => section.classList.remove(activeClass));
 }
 function main() {
   nav = document.querySelector("#navbar__list");
