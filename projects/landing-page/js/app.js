@@ -64,7 +64,7 @@ function buildMenu() {
   allSection.forEach((section) => {
     const newLi = document.createElement("li");
     const anchor = document.createElement("a");
-    anchor.setAttribute("class", `menu__link${addActive}`);
+    anchor.setAttribute("class", `menu__link${addActive} ${section.id}`);
     addActive = "";
     const newContent = document.createTextNode(section.dataset.nav);
     anchor.appendChild(newContent);
@@ -76,21 +76,20 @@ function buildMenu() {
   const selectedLink = document.querySelector(`a.${activeClass}`);
   const sectionId = selectedLink.dataset.section;
   const section = document.querySelector(`#${sectionId}`);
-  if (section) {
-    setTimeout(() => {
-      section.scrollIntoView({ behavior: "smooth" });
-    }, 50);
-  }
+  // if (section) {
+  //   setTimeout(() => {
+  //     section.scrollIntoView({
+  //       behavior: "smooth",
+  //     });
+  //   }, 50);
+  // }
 }
 
 function handleScrollOnClick() {
   nav.addEventListener("click", function (e) {
     try {
       const sectionId = e.target.dataset.section;
-      const section = document.querySelector(`#${sectionId}`);
-      allSection.forEach((section) => section.classList.remove(activeClass));
-      section.classList.add(activeClass);
-      section.scrollIntoView({ behavior: "smooth" });
+      setSelectedSection(sectionId);
       setSelectedMenu();
       e.target.classList.add(activeClass);
     } catch (e) {
@@ -99,13 +98,48 @@ function handleScrollOnClick() {
   });
 }
 
+function setSelectedSection(sectionId, scroll = true) {
+  const section = document.querySelector(`#${sectionId}`);
+  allSection.forEach((section) => section.classList.remove(activeClass));
+  section.classList.add(activeClass);
+  if (scroll) {
+    section.scrollIntoView({
+      behavior: "smooth",
+    });
+  }
+}
+
 function setSelectedMenu() {
   const allLinks = document.querySelectorAll("a.menu__link");
   allLinks.forEach((section) => section.classList.remove(activeClass));
 }
+
+function handleWindowScroll() {
+  document.addEventListener("scroll", (e) => {
+    const sections = document.querySelectorAll("section");
+    const mid = 200; //screen.height / 2;
+    for (let i = 0; i < sections.length; i++) {
+      const cords = sections[i].getBoundingClientRect();
+      if (cords.top >= 0 && cords.top <= mid) {
+        setSelectedSection(sections[i].getAttribute("id"), false);
+        setSelectedMenu();
+        const link = document.querySelector(
+          `a.${sections[i].getAttribute("id")}`
+        );
+        if (link) {
+          link.classList.add(activeClass);
+        }
+
+        break;
+      }
+    }
+  });
+}
+
 function main() {
   nav = document.querySelector("#navbar__list");
   allSection = document.querySelectorAll("section");
   buildMenu();
   handleScrollOnClick();
+  handleWindowScroll();
 }
