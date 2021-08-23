@@ -1,64 +1,13 @@
-/**
- *
- * Manipulating the DOM exercise.
- * Exercise programmatically builds navigation,
- * scrolls to anchors from navigation,
- * and highlights section in viewport upon scrolling.
- *
- * Dependencies: None
- *
- * JS Version: ES2015/ES6
- *
- * JS Standard: ESlint
- *
- */
-
-/**
- * Define Global Variables
- *
- */
-
-/**
- * End Global Variables
- * Start Helper Functions
- *
- */
-
-/**
- * End Helper Functions
- * Begin Main Functions
- *
- */
-
-// build the nav
-
-// Add class 'active' to section when near top of viewport
-
-// Scroll to anchor ID using scrollTO event
-
-/**
- * End Main Functions
- * Begin Events
- *
- */
-
-// Build menu
-
-// Scroll to section on link click
-
-// Set sections as active
-
-/**
- * Logic:
- * File all sections and build li a using data-nav values
- * append section id into li and bind new onClick event on parent
- * on click of parent check for tag (try/catch) and scroll to view
- * remove all old active class and add into new active element
- */
+//
 let nav = null;
+// 
 let allSection = null;
+//This variable sets the active class to active
 const activeClass = "active";
 
+/**
+ * This function is  used to build the menu
+ */
 function buildMenu() {
   let addActive = ` ${activeClass}`;
   allSection.forEach((section) => {
@@ -76,15 +25,11 @@ function buildMenu() {
   const selectedLink = document.querySelector(`a.${activeClass}`);
   const sectionId = selectedLink.dataset.section;
   const section = document.querySelector(`#${sectionId}`);
-  // if (section) {
-  //   setTimeout(() => {
-  //     section.scrollIntoView({
-  //       behavior: "smooth",
-  //     });
-  //   }, 50);
-  // }
 }
 
+/**
+ * This function is used to handle scrolling when the menu item is clicked
+ */
 function handleScrollOnClick() {
   nav.addEventListener("click", function (e) {
     try {
@@ -98,6 +43,11 @@ function handleScrollOnClick() {
   });
 }
 
+/**
+ * This function is removing active class from existing and adding it to the current menu links
+ * @param {*} sectionId 
+ * @param {*} scroll 
+ */
 function setSelectedSection(sectionId, scroll = true) {
   const section = document.querySelector(`#${sectionId}`);
   allSection.forEach((section) => section.classList.remove(activeClass));
@@ -108,12 +58,17 @@ function setSelectedSection(sectionId, scroll = true) {
     });
   }
 }
-
+/**
+ * This function is removing the active class from existing  adding it to the current menu
+ */
 function setSelectedMenu() {
   const allLinks = document.querySelectorAll("a.menu__link");
-  allLinks.forEach((section) => section.classList.remove(activeClass));
+  allLinks.forEach((link) => link.classList.remove(activeClass));
 }
 
+/**
+ * This  function handles the window scrolling and selects the section and menus
+ */
 function handleWindowScroll() {
   document.addEventListener("scroll", (e) => {
     const sections = document.querySelectorAll("section");
@@ -136,6 +91,9 @@ function handleWindowScroll() {
   });
 }
 
+/** This is the main function which handles the complete functionality of the page using all other functions
+ * 
+ */
 function main() {
   nav = document.querySelector("#navbar__list");
   allSection = document.querySelectorAll("section");
