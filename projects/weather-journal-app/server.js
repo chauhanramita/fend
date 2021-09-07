@@ -7,7 +7,6 @@ import routes from "./apiRoutes.js";
 // const bodyParser = require("body-parser");
 
 const app = express();
-const projectData = {};
 
 // Cors for cross origin allowance
 

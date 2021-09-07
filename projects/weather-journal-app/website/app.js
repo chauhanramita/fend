@@ -1,17 +1,19 @@
 // Create a new date instance dynamically with JS
+const WEATHER_MAP_APP_ID = "f42174352bae921a80d52d1c96aa8849";
 const API_BASE = "http://localhost:8000/api/";
 const API_PROJECT_ENDPOINT = `${API_BASE}/projects`;
-const API_CURRENT_WEATHER_ENDPOIT = `${API_BASE}/currentWeather`;
+const API_CURRENT_WEATHER_ENDPOIT =
+  "https://api.openweathermap.org/data/2.5/weather";
 
 /**
  * Post user form with temprature to API to store in project data
- * @param {FormData} form 
- * @param {String} temprature 
- * @returns 
+ * @param {FormData} form
+ * @param {String} temperature
+ * @returns
  */
-function postUserData(form, temprature) {
+function postUserData(form, temperature) {
   const data = {
-    temperature: temprature,
+    temperature: temperature,
     date: Date.now(),
     user_response: form.get("feelings"),
   };
@@ -33,7 +35,7 @@ function fetchAllData() {
     .then((res) => res.json())
     .then((res) => {
       const userresDiv = document.getElementById("entryHolder");
-      const html = getUserWeatherLogHtml(res);
+      const html = getUserWeatherLogHtml(Object.values(res));
       userresDiv.innerHTML =
         html.length > 0
           ? html.join("")
@@ -43,7 +45,7 @@ function fetchAllData() {
 
 /**
  * iterate on data and build html
- * @param {Array} data 
+ * @param {Array} data
  * @returns [String]
  */
 function getUserWeatherLogHtml(data) {
@@ -63,15 +65,19 @@ function getUserWeatherLogHtml(data) {
 
 /**
  * function to handle on submit call of form
- * @param {FormObject} form 
- * @returns 
+ * @param {FormObject} form
+ * @returns
  */
 function handleGenerateClick(form) {
   try {
     let formData = new FormData(form);
+    let zip = formData.get("zip");
+    if (zip.trim().length === 0) {
+      alert("Zip cannot be left empty");
+      return;
+    }
     // read weather
-    fetch(`${API_CURRENT_WEATHER_ENDPOIT}?zip=${formData.get("zip")}`)
-      .then((res) => res.json())
+    getWeather(zip)
       .then((temprature) => {
         if (temprature.cod === "404") {
           // on weather faiure catch exception and bail out
@@ -84,14 +90,26 @@ function handleGenerateClick(form) {
         // post user response to server
         return postUserData(formData, temprature.temp);
       })
-      .then(() => fetchAllData()) // featch all recorded data
-      .catch((e) => {
-        debugger;
-      });
+      .then(() => fetchAllData()); // featch all recorded data
   } catch (e) {
     alert(e.message);
   }
   return false;
+}
+
+/**
+ * get zip code and call weather map URL to read current weather
+ * @param {String} zip
+ * @returns Promise
+ */
+function getWeather(zip) {
+  return fetch(
+    `${API_CURRENT_WEATHER_ENDPOIT}?${new URLSearchParams({
+      zip: zip,
+      appid: WEATHER_MAP_APP_ID,
+      units: "imperial",
+    }).toString()}`
+  ).then((res) => res.json());
 }
 
 // fetch project data if available
